@@ -13,9 +13,9 @@ uint8_t mask_byte(uint8_t byte, int n_zero, int n_one, Generators& gen, Statisti
     uint8_t response_byte = 0;      // байт на выход
     ex_bit.update_code_table(byte); // подсчёт кол-ва каждого символа
     for(int i = 0; i < 8; i++) {
-        uint8_t x = gen.next_step_generators_1_2(); // получение бита обратной связи от двух генераторов
+        uint8_t x = gen.next_step_generators_3_4(); // получение бита обратной связи от двух генераторов
                                                     //		uint8_t x = gen.next_step_generators_3_4();
-        ex_bit.update_data(x); // подсчёт статистических данных
+        ex_bit.update_data((byte >> i) & 0x1); // подсчёт статистических данных для бита без маски
         response_byte <<= 1;
         if((n_zero != 0) && (n_one != 0)) { // проверка на преобладание
             if(x)
@@ -70,11 +70,11 @@ int main(int argc, char** argv)
         Statistic stat, stat_mask; // объявление экземляров класса статистики для последовательности бит файла до и
                                    // после маскирования
         char byte_out;
-        //        ifstream file_1("/home/user/Projects_C/Project_1/Project_1/Project_1/meow.bmp", ios::binary |
-        //        ios::in); ofstream file_2("/home/user/Projects_C/Project_1/Project_1/Project_1/meow_mask.bmp",
-        //        ios::binary | ios::out);
-        ifstream file_1("/home/user/Projects_C/Project_1/Project_1/Project_1/1.txt", ios::binary | ios::in);
-        ofstream file_2("/home/user/Projects_C/Project_1/Project_1/Project_1/1_mask.txt", ios::binary | ios::out);
+        ifstream file_1("/home/user/Projects_C/Project_1/Project_1/Project_1/meow.bmp", ios::binary | ios::in);
+        ofstream file_2("/home/user/Projects_C/Project_1/Project_1/Project_1/meow_mask.bmp", ios::binary | ios::out);
+        //        ifstream file_1("/home/user/Projects_C/Project_1/Project_1/Project_1/1.txt", ios::binary | ios::in);
+        //        ofstream file_2("/home/user/Projects_C/Project_1/Project_1/Project_1/1_mask.txt", ios::binary |
+        //        ios::out);
         if(!file_1) {
             cout << "Файл не найден" << endl;
             return 1;
@@ -86,10 +86,10 @@ int main(int argc, char** argv)
         cout << "Введите t: " << endl;
         cin >> t;
         cout << "Файл маскируется..." << endl;
-//        for(int i = 0; i < 54; i++) {
-//            file_1.get(byte_out);
-//            file_2.write((char*)&byte_out, sizeof(char));
-//        }
+        for(int i = 0; i < 54; i++) {
+            file_1.get(byte_out);
+            file_2.write((char*)&byte_out, sizeof(char));
+        }
         while(file_1.get(byte_out)) {
             uint8_t byte_in;
             stat.update_bytes_size();      //подсчёт байтов

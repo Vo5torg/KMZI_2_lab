@@ -32,19 +32,29 @@ void Statistic::update_data(uint8_t x)
 void Statistic::calc_corellation(int t)
 {
     int At = 0, Bt = 0;
+    cout << "Автокорреляция ПСП:" << endl;
     switch(t) {
     case 0: {
         cout << "K(t) = 1";
         break;
     }
     default: {
+        //        for(int x = 1; x <= t; x++) {
+        //            At = 0, Bt = 0;
+        //            for(long unsigned int i = x; i < bits_for_autocorrelation.size(); i++) {
+        //                if(bits_for_autocorrelation[i] == bits_for_autocorrelation[i - t])
+        //                    At++;
+        //                else
+        //                    Bt++;
+        //            }
+        //            cout << (double)(At - Bt) / (double)(At + Bt) << endl;
+        //        }
         for(long unsigned int i = t; i < bits_for_autocorrelation.size(); i++) {
             if(bits_for_autocorrelation[i] == bits_for_autocorrelation[i - t])
                 At++;
             else
                 Bt++;
         }
-        cout << "Автокорреляция ПСП:" << endl;
         cout << "A(t) = " << At << "\nB(t) = " << Bt << "\nK(t) = " << (double)(At - Bt) / (At + Bt) << endl;
     }
     }
@@ -82,7 +92,7 @@ void Statistic::print_num_prob(int comb_num)
     switch(comb_num) {
     case 1:
         all_nums = (double)size_bits_sequence;
-        cout << "0:" << (double)frequency_arr[0][0] / all_nums << "; 0:" << (double)frequency_arr[0][1] / all_nums
+        cout << "0:" << (double)frequency_arr[0][0] / all_nums << "; 1:" << (double)frequency_arr[0][1] / all_nums
              << endl;
         break;
     case 2:
@@ -122,7 +132,7 @@ void Statistic::print_num_prob(int comb_num)
     switch(comb_num) {
     case 1:
         all_nums = (double)size_bits_sequence;
-        cout << "0:" << (double)frequency_arr[0][0] / all_nums << "; 0:" << (double)frequency_arr[0][1] / all_nums
+        cout << "0:" << (double)frequency_arr[0][0] / all_nums << "; 1:" << (double)frequency_arr[0][1] / all_nums
              << endl;
         break;
     case 2:
@@ -163,7 +173,8 @@ void Statistic::update_code_table(uint8_t byte) { code_tabl_arr[byte] += 1; }
 void Statistic::print_code_table()
 {
     for(int i = 0; i <= 255; i++) {
-        cout << (char)i << " : " << i << " : " << (double)code_tabl_arr[i] / (double)nums_bytes << endl;
+        //        cout << (char)i << " : " << i << " : " << (double)code_tabl_arr[i] / (double)nums_bytes << endl;
+        cout << (double)code_tabl_arr[i] / (double)nums_bytes << endl;
     }
 }
 void Statistic::update_bytes_size() { nums_bytes += 1; }
